@@ -93,6 +93,41 @@ def section(builder):
     out.insert(mark, f'<rect x="{PAD}" y="{top}" width="{CW}" height="{y-top}" rx="16" fill="{CARD}"/>')
     y += 10
 
+# ---- 추천 세팅 (티팟 추천모델 세팅) ----
+def s0(y):
+    P = D["presets"]
+    T(TX, y, P["title"], 14.5, INK, 800); y += 20
+    y = para(TX, y, P["intro"], 12, GREY, TW, 18) + 6
+    for p in P["list"]:
+        top = y; mark = len(out)
+        iy = y + 22
+        isbase = p["no"] == "기본"
+        bw = text_w(p["no"], 10.5) + 14
+        R(TX + 10, iy - 13, bw, 18, 5, "#e7f8ef" if isbase else "#ececec")
+        T(TX + 10 + bw / 2, iy, p["no"], 10.5, GREEN_D if isbase else GREY, 800, "middle")
+        T(TX + 10 + bw + 8, iy, p["name"], 14, INK, 800)
+        iy += 19
+        T(TX + 10, iy, p["model"], 12, INK, 600)
+        mw = text_w(p["model"], 12)
+        R(TX + 10 + mw + 8, iy - 12, 44, 17, 5, "#e8efff"); T(TX + 10 + mw + 30, iy + 0.5, "종량제", 10.5, "#3a6ff0", 700, "middle")
+        iy = para(TX + 10, iy + 18, p["spec"], 11.5, GREY, TW - 20, 16)
+        for kind, txt in p["notes"]:
+            col = GREEN_D if kind == "cost" else "#c25a3a"
+            iy = para(TX + 10, iy + 3, ("💰 " if kind == "cost" else "✎ ") + txt, 11.5, col, TW - 20, 16)
+        y = iy + 4
+        out.insert(mark, f'<rect x="{TX}" y="{top}" width="{TW}" height="{y-top}" rx="12" fill="{SOFT}"/>')
+        y += 8
+    y = para(TX, y + 6, P["memo_hint"], 11, LIGHT, TW, 16)
+    lines = wrap(P["caution"], 12, TW - 24)
+    h = 16 + len(lines) * 18
+    R(TX, y + 6, TW, h, 12, "#fff4e0")
+    yy = y + 6 + 20
+    for ln in lines: T(TX + 12, yy, ln, 12, "#8a5a00", 600); yy += 18
+    y = y + 6 + h + 22
+    T(TX, y, P["manual"], 12.5, INK, 700)
+    return y + 4
+section(s0)
+
 # ---- STEP 1 ----
 def s1(y):
     M = D["models"]
