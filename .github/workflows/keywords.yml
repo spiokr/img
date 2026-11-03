@@ -1,11 +1,13 @@
-# keywords/common.json 을 고쳐서 올리면 common.svg 를 다시 그리고,
+# keywords/common.json 또는 guide/guide.json 을 고쳐서 올리면 SVG 이미지를 다시 그리고,
 # jsDelivr 캐시를 비워서 모든 캐릭터에 바로 반영되게 합니다.
-name: Render common keywords
+name: Render common keywords & guide
 on:
   push:
     paths:
       - "keywords/common.json"
       - "keywords/render.py"
+      - "guide/guide.json"
+      - "guide/render.py"
   workflow_dispatch:
 permissions:
   contents: write
@@ -18,15 +20,18 @@ jobs:
         with:
           python-version: "3.12"
       - name: Render SVG
-        run: python keywords/render.py
+        run: |
+          python keywords/render.py
+          python guide/render.py
       - name: Commit SVG
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
-          git add keywords/common.svg
-          git diff --cached --quiet || git commit -m "공통 키워드 이미지 갱신"
+          git add keywords/common.svg guide/guide.svg
+          git diff --cached --quiet || git commit -m "공통 키워드·설정 가이드 이미지 갱신"
           git push
       - name: Purge jsDelivr cache
         run: |
           sleep 5
           curl -s "https://purge.jsdelivr.net/gh/spiokr/img@main/keywords/common.svg" || true
+          curl -s "https://purge.jsdelivr.net/gh/spiokr/img@main/guide/guide.svg" || true
