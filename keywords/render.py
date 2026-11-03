@@ -2,7 +2,9 @@
 SORAM 공통 키워드 이미지를 그립니다. 외부 패키지 없이 파이썬만 있으면 됩니다.
 사용법: python keywords/render.py  (GitHub Actions가 자동으로 실행합니다)
 """
-import json, os
+import json, os, sys
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "fonts"))
+from embed import style_block, FONT_STACK
 from xml.sax.saxutils import escape
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -12,7 +14,7 @@ data = json.load(open(os.path.join(HERE, "common.json"), encoding="utf-8"))
 BG, CARD, ROW = "#0f0d10", "#171418", "#1f1a20"
 LINE, ROSE, ROSE_DIM = "#2e262d", "#c9a3ab", "#8c7f86"
 IVORY, TEXT, SUB, NOTE = "#efe9e2", "#d9d2cb", "#9a8f96", "#e0a27e"
-FONT = "Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif"
+FONT = FONT_STACK
 MARKS = ["◆", "✦", "◉", "✧"]
 
 W, PAD, IN = 360, 12, 10           # 전체 폭, 바깥 여백, 카드 안쪽 여백
@@ -90,6 +92,6 @@ t(W / 2, y, "made by SORAM", 10, ROSE_DIM, 400, "middle", 2); y += 16
 H = int(y)
 
 svg = (f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" font-family="{escape(FONT)}">'
-       f'<rect width="{W}" height="{H}" rx="16" fill="{BG}"/>' + "".join(out) + "</svg>")
+       + style_block("".join(out)) + f'<rect width="{W}" height="{H}" rx="16" fill="{BG}"/>' + "".join(out) + "</svg>")
 open(os.path.join(HERE, "common.svg"), "w", encoding="utf-8").write(svg)
 print(f"common.svg  {W}x{H}")

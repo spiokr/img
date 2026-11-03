@@ -2,7 +2,9 @@
 SORAM 설정 가이드(STEP 1~3) 이미지를 그립니다. 외부 패키지 없이 파이썬만 있으면 됩니다.
 사용법: python guide/render.py  (GitHub Actions가 자동으로 실행합니다)
 """
-import json, os
+import json, os, sys
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "fonts"))
+from embed import style_block, FONT_STACK
 from xml.sax.saxutils import escape
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -12,7 +14,7 @@ D = json.load(open(os.path.join(HERE, "guide.json"), encoding="utf-8"))
 BG, CARD, SOFT, LINE = "#f4f5f6", "#ffffff", "#f4f5f6", "#eeeeee"
 INK, GREY, LIGHT, GREEN, GREEN_D = "#1a1a1a", "#8b8b8b", "#a3a3a3", "#13c46c", "#13a35c"
 BADGE = {"green": ("#e7f8ef", "#13a35c"), "orange": ("#fbeee8", "#c25a3a"), "black": ("#1a1a1a", "#ffffff")}
-FONT = "Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif"
+FONT = FONT_STACK
 
 W, PAD, IN = 360, 10, 14
 CW = W - PAD * 2           # 카드 폭
@@ -175,6 +177,6 @@ section(s3)
 
 H = int(y + 4)
 svg = (f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" font-family="{escape(FONT)}">'
-       f'<rect width="{W}" height="{H}" rx="16" fill="{BG}"/>' + "".join(out) + "</svg>")
+       + style_block("".join(out)) + f'<rect width="{W}" height="{H}" rx="16" fill="{BG}"/>' + "".join(out) + "</svg>")
 open(os.path.join(HERE, "guide.svg"), "w", encoding="utf-8").write(svg)
 print(f"guide.svg  {W}x{H}")

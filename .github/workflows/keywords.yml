@@ -8,6 +8,7 @@ on:
       - "keywords/render.py"
       - "guide/guide.json"
       - "guide/render.py"
+      - "fonts/**"
   workflow_dispatch:
 permissions:
   contents: write
@@ -19,6 +20,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Install font tools
+        run: pip install fonttools brotli
       - name: Render SVG
         run: |
           python keywords/render.py
