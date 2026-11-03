@@ -32,6 +32,7 @@ jobs:
           git config user.email "github-actions@users.noreply.github.com"
           git add keywords/common.svg guide/guide.svg
           git diff --cached --quiet || git commit -m "공통 키워드·설정 가이드 이미지 갱신"
+          git pull --rebase origin main
           git push
       - name: Purge jsDelivr cache
         run: |
