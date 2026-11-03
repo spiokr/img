@@ -1,6 +1,6 @@
 """keywords/common.json -> keywords/common.svg
 SORAM 공통 키워드 이미지를 그립니다. 외부 패키지 없이 파이썬만 있으면 됩니다.
-사용법: python keywords/render.py
+사용법: python keywords/render.py  (GitHub Actions가 자동으로 실행합니다)
 """
 import json, os
 from xml.sax.saxutils import escape
