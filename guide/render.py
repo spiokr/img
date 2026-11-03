@@ -84,7 +84,7 @@ def setting(y, name, value, desc, width=TW, x=TX):
 y = 26
 T(PAD + 4, y, D["eyebrow"], 12.5, GREEN_D, 700); y += 24
 T(PAD + 4, y, D["title"], 19, INK, 800); y += 20
-y = para(PAD + 4, y, D["subtitle"], 12.5, GREY, CW - 8, 18) + 6
+y = (para(PAD + 4, y, D["subtitle"], 12.5, GREY, CW - 8, 18) + 6) if D.get("subtitle") else y - 6
 
 def section(builder):
     global y
@@ -105,13 +105,16 @@ def s0(y):
         bw = text_w(p["no"], 10.5) + 14
         R(TX + 10, iy - 13, bw, 18, 5, "#e7f8ef" if isbase else "#ececec")
         T(TX + 10 + bw / 2, iy, p["no"], 10.5, GREEN_D if isbase else GREY, 800, "middle")
-        T(TX + 10 + bw + 8, iy, p["name"], 14, INK, 800)
-        iy += 19
-        T(TX + 10, iy, p["model"], 11.5, GREY, 600)
-        iy = para(TX + 10, iy + 19, p["desc"], 13, INK, TW - 20, 18) - 18
-        for kind, txt in p["notes"]:
-            col = GREEN_D if kind == "cost" else "#c25a3a"
-            iy = para(TX + 10, iy + 21, ("💰 " if kind == "cost" else "✎ ") + txt, 12, col, TW - 20, 17) - 17
+        nl = wrap(p["name"], 14, TW - bw - 28)
+        for k, ln in enumerate(nl):
+            T(TX + 10 + bw + 8, iy + k * 19, ln, 14, INK, 800)
+        iy += (len(nl) - 1) * 19 + 6
+        for line in p["lines"]:
+            wl = wrap(line, 12.5, TW - 34)
+            for k, ln in enumerate(wl):
+                iy += 19
+                if k == 0: T(TX + 12, iy, "→", 12, GREEN_D, 700)
+                T(TX + 28, iy, ln, 12.5, "#3a3a3a")
         y = iy + 16
         out.insert(mark, f'<rect x="{TX}" y="{top}" width="{TW}" height="{y-top}" rx="12" fill="{SOFT}"/>')
         y += 8
